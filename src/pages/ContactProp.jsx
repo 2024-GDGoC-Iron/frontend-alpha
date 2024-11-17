@@ -20,7 +20,7 @@ const ContactProp = () => {
         }]);
 
         // WebSocket 연결
-        ws.current = new WebSocket('wss://lu6wbizt4e.execute-api.ap-northeast-1.amazonaws.com/production');
+        ws.current = new WebSocket(process.env.Web_Socket);
 
         // WebSocket 이벤트 리스너 설정
         ws.current.onopen = () => {
@@ -40,7 +40,16 @@ const ContactProp = () => {
                     const newMessage = {
                         id: Date.now(),
                         sender: '잇픽',
-                        text: response.message.replace(/\n/g, '<br/>'), // Newline conversion
+                        text: response.message.replace(/\n/g, '<br/>'),
+                        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                        sentByUser: false,
+                    };
+                    setMessages(prev => [...prev, newMessage]);
+                } else {
+                    const newMessage = {
+                        id: Date.now(),
+                        sender: '잇픽',
+                        text: "알빠노",
                         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
                         sentByUser: false,
                     };

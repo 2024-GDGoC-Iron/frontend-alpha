@@ -7,7 +7,7 @@ class WebSocketService {
         this.reconnectAttempts = 0;
         this.maxReconnectAttempts = 5;
         this.onMessageCallback = null;
-        this.wsUrl = 'wss://lu6wbizt4e.execute-api.ap-northeast-1.amazonaws.com/production/';  // WebSocket URL을 직접 설정
+        this.wsUrl = process.env.Web_Socket;  // WebSocket URL을 직접 설정
     }
 
     connect(userId, sessionId) {
