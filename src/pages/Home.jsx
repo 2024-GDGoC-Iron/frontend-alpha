@@ -10,12 +10,13 @@ function Home() {
             <img src={titleImg} alt="logo" onClick={() => navigate('/')} />
             <div className={style.textArea}>
                 <div className={style.titleArea}>
-                    <h1>서비스 소개글</h1>
-                    <p>소비글 텍스트 세부사항</p>
+                    <h1>요즘 대학원 시작은</h1>
+                    <h2>IT!PICK</h2>
+                    <p>매칭도, 컨택도 잇픽과 함께</p>
                 </div>
                 <div className={style.buttonArea}>
-                    <button className={style.button1} onClick={() => navigate('/ContactProp')}>이미 원하는 교수가 있을 때</button>
-                    <button className={style.button2} onClick={() => navigate('/SearchProp')}>컨택할 교수를 매칭할 때</button>
+                    <button className={style.button1} onClick={() => navigate('/ContactProp')}>랩실 매칭이 필요해요</button>
+                    <button className={style.button2} onClick={() => navigate('/SearchProp')}>컨택할 랩을 결정했어요</button>
                 </div>
             </div>
         </div>
