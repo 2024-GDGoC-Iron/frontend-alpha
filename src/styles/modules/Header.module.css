@@ -1,0 +1,45 @@
+.Header {
+    position: fixed;
+    width: 100%;
+    height: 72px;
+    background-color: #FFFFFF;
+    z-index: 9999;
+    border-bottom: 1px solid #DEE5ED;
+}
+
+
+.TitleArea {
+    display: flex;
+    height: 100%;
+    align-items: center;
+}
+
+.TitleArea img {
+    width: 38px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.MenuArea {
+    display: flex;
+    height: 48px;
+    margin-left: auto;
+    margin-right: 25px;
+    align-items: center;
+}
+
+.MenuArea li {
+    font-size: 16px;
+    margin-left: 48px;
+    list-style: none;
+    cursor: pointer;
+}
+
+.login {
+    padding: 12px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-radius: 50px;
+    background-color: #486284;
+    color: #FFFFFF;
+}
