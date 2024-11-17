@@ -40,7 +40,7 @@ const ContactProp = () => {
                     const newMessage = {
                         id: Date.now(),
                         sender: '잇픽',
-                        text: response.message,
+                        text: response.message.replace(/\n/g, '<br/>'), // Newline conversion
                         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
                         sentByUser: false,
                     };
@@ -121,7 +121,10 @@ const ContactProp = () => {
                         <div className={style.senderName}>
                             {!msg.sentByUser ? msg.sender : ''}
                         </div>
-                        <span className={style.messageText}>{msg.text}</span>
+                        <div
+                            className={style.messageText}
+                            dangerouslySetInnerHTML={{ __html: msg.text }} // Rendering with HTML
+                        ></div>
                         <div className={style.messageTime}>{msg.time}</div>
                     </div>
                 ))}
