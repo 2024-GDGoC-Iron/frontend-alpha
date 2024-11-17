@@ -16,12 +16,13 @@ function Main() {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   const handleLoginClick = () => {
-    setIsLoggedIn(false);
+    setIsLoggedIn(true);
   };
 
   const handleLogoutClick = () => {
     setIsLoggedIn(false);
   };
+
   return (
     <BrowserRouter>
       <div className="Main">

@@ -14,8 +14,8 @@ function Home() {
                     <p>소비글 텍스트 세부사항</p>
                 </div>
                 <div className={style.buttonArea}>
-                    <button className={style.button1}>이미 원하는 교수가 있을 때</button>
-                    <button className={style.button2}>컨택할 교수를 매칭할 때</button>
+                    <button className={style.button1} onClick={() => navigate('/ContactProp')}>이미 원하는 교수가 있을 때</button>
+                    <button className={style.button2} onClick={() => navigate('/SearchProp')}>컨택할 교수를 매칭할 때</button>
                 </div>
             </div>
         </div>

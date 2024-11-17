@@ -3,10 +3,9 @@
     width: 100%;
     height: 72px;
     background-color: #FFFFFF;
-    z-index: 9999;
     border-bottom: 1px solid #DEE5ED;
+    z-index: 99999;
 }
-
 
 .TitleArea {
     display: flex;
@@ -18,6 +17,7 @@
     width: 90px;
     height: 38px;
     margin-left: 55px;
+    cursor: pointer;
 }
 
 .MenuArea {
@@ -39,7 +39,16 @@
     padding: 12px;
     padding-left: 20px;
     padding-right: 20px;
+    border: solid;
     border-radius: 50px;
+    border-width: 2px;
+    border-color: #486284;
     background-color: #486284;
     color: #FFFFFF;
+}
+
+.login:hover {
+    border-color: #486284;
+    background-color: #ffffff;
+    color: #000000;
 }

@@ -69,8 +69,20 @@
     color: #000000;
 }
 
+.buttonArea .button1:hover {
+    border-color: #486284;
+    background-color: #486284;
+    color: #FFFFFF;
+}
+
 .buttonArea .button2 {
     border-color: #486284;
     background-color: #486284;
     color: #FFFFFF;
+}
+
+.buttonArea .button2:hover {
+    border-color: #486284;
+    background-color: #ffffff;
+    color: #000000;
 }
