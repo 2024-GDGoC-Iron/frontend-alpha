@@ -1,0 +1,13 @@
+.Title {
+    width: 100%;
+    height: 100px;
+    padding-top: 80px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.Title h1 {
+    display: contents;
+    font-size: 60px;
+    color: #486284;
+}

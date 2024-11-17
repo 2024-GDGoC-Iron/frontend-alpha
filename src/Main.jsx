@@ -4,7 +4,6 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 
 import Home from './pages/Home';
-import Chat from './pages/Chat';
 import ContactProp from './pages/ContactProp';
 import SearchProp from './pages/SearchProp';
 import ApplicationStatus from './pages/ApplicationStatus';
@@ -33,7 +32,6 @@ function Main() {
             onLogoutClick={handleLogoutClick} />
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/Chat" element={<Chat />} />
             <Route path="/ContactProp" element={<ContactProp />} />
             <Route path="/searchProp" element={<SearchProp />} />
             <Route path="/ApplicationStatus" element={<ApplicationStatus />} />
