@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Web_Socket_Key } from '../config';
 import Title from '../components/Title';
 import style from '../styles/modules/ContactProp.module.css';
 
@@ -20,7 +21,7 @@ const ContactProp = () => {
         }]);
 
         // WebSocket 연결
-        ws.current = new WebSocket(process.env.Web_Socket);
+        ws.current = new WebSocket(Web_Socket_Key);
 
         // WebSocket 이벤트 리스너 설정
         ws.current.onopen = () => {

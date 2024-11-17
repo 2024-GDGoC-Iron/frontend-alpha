@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
-
 import Home from './pages/Home';
 import ContactProp from './pages/ContactProp';
 import SearchProp from './pages/SearchProp';
