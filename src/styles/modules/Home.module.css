@@ -1,3 +1,76 @@
 .Home {
-    width: 100%;
+    display: flex;
+    position: fixed;
+    width: 60%;
+    height: 100%;
+    margin: auto;
+    margin-left: 20vh;
+    align-items: center;
+    z-index: 9999;
+}
+
+.img {
+    width: 564px;
+    height: 290px;
+    border-radius: 25px;
+}
+
+.textArea {
+    width: 612px;
+    height: 192px;
+    margin: auto;
+    margin-left: 40px;
+}
+
+.titleArea {
+    width: 612px;
+    height: 124px;
+}
+
+.titleArea h1 {
+    color: #486284;
+    display: contents;
+    font-size: 60px;
+}
+
+.titleArea p {
+    color: #8CA2C0;
+    margin-top: 10px;
+    font-size: 20px;
+}
+
+.buttonArea {
+    display: flex;
+    flex-direction: row;
+    width: 612px;
+    height: 72px;
+}
+
+.buttonArea button {
+    height: 48px;
+    margin: auto;
+    margin-left: 0px;
+    margin-right: 20px;
+    padding: 12px;
+    padding-inline: 0px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border: solid;
+    border-radius: 50px;
+    border-width: 2px;
+    font-size: 16px;
+    cursor: pointer;
+    outline: none;
+}
+
+.buttonArea .button1 {
+    border-color: #486284;
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.buttonArea .button2 {
+    border-color: #486284;
+    background-color: #486284;
+    color: #FFFFFF;
 }
