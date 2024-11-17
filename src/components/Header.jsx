@@ -17,8 +17,8 @@ function Header({ isLoggedIn = false, onLoginClick, onLogoutClick }) {
     };
     return (
         <div className={style.Header}>
-            <div className={style.TitleArea}>
-                <img src={logo} alt="logo" onClick={() => navigate('/')} />
+            <div className={style.TitleArea} onClick={() => navigate('/')}>
+                <img src={logo} alt="logo" />
                 <h1>IT!PICK</h1>
                 <ul className={style.MenuArea}>
                     <li onClick={() => navigate('/')} >Home</li>
