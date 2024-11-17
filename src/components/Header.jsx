@@ -19,6 +19,7 @@ function Header({ isLoggedIn = false, onLoginClick, onLogoutClick }) {
         <div className={style.Header}>
             <div className={style.TitleArea}>
                 <img src={logo} alt="logo" onClick={() => navigate('/')} />
+                <h1>IT!PICK</h1>
                 <ul className={style.MenuArea}>
                     <li onClick={() => navigate('/')} >Home</li>
                     <li onClick={() => navigate('/ContactProp')} >교수 컨택</li>
