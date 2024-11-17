@@ -17,9 +17,9 @@ function Header({ isLoggedIn = false, onLoginClick, onLogoutClick }) {
     };
     return (
         <div className={style.Header}>
-            <div className={style.TitleArea} onClick={() => navigate('/')}>
-                <img src={logo} alt="logo" />
-                <h1>IT!PICK</h1>
+            <div className={style.TitleArea}>
+                <img src={logo} alt="logo" onClick={() => navigate('/')} />
+                <h1 onClick={() => navigate('/')}>IT!PICK</h1>
                 <ul className={style.MenuArea}>
                     <li onClick={() => navigate('/')} >Home</li>
                     <li onClick={() => navigate('/ContactProp')} >교수 컨택</li>
@@ -31,7 +31,7 @@ function Header({ isLoggedIn = false, onLoginClick, onLogoutClick }) {
                         </div>
                     </li>
                 </ul>
-            </div>
+            </div>  
         </div>
     );
 }
