@@ -1,108 +1,112 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Title from '../components/Title';
 import style from '../styles/modules/ContactProp.module.css';
 
 const ContactProp = () => {
-    const initialMessages = [
-        { id: 1, sender: '잇픽', text: '저와 함께 채팅을 시작해요!', time: 'just now', sentByUser: false, read: true },
-    ];
-
-    const [messages, setMessages] = useState(initialMessages);
+    const [messages, setMessages] = useState([]);
     const [inputValue, setInputValue] = useState('');
+    const chatMessagesRef = useRef(null);
+    const ws = useRef(null);
 
-    const chatMessagesRef = useRef(null); // Ref for the chat container
+    // WebSocket 연결 설정
+    useEffect(() => {
+        // 초기 메시지 설정
+        setMessages([{
+            id: 1,
+            sender: '잇픽',
+            text: '저와 함께 채팅을 시작해요!',
+            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            sentByUser: false,
+        }]);
 
-    // Scroll to the bottom whenever messages change
+        // WebSocket 연결
+        ws.current = new WebSocket('wss://lu6wbizt4e.execute-api.ap-northeast-1.amazonaws.com/production');
+
+        // WebSocket 이벤트 리스너 설정
+        ws.current.onopen = () => {
+            console.log('WebSocket Connected');
+        };
+
+        ws.current.onmessage = (event) => {
+            console.log('Raw message received:', event.data);
+            try {
+                if (!event.data) return;
+
+                const response = JSON.parse(event.data);
+                console.log('Parsed message:', response);
+
+                // AI 응답 메시지 추가
+                if (response && response.message) {
+                    const newMessage = {
+                        id: Date.now(),
+                        sender: '잇픽',
+                        text: response.message.replace(/\n/g, '<br/>'), // Newline conversion
+                        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                        sentByUser: false,
+                    };
+                    setMessages(prev => [...prev, newMessage]);
+                }
+            } catch (error) {
+                console.error('Error handling message:', error);
+                console.log('Problematic message data:', event.data);
+            }
+        };
+
+        ws.current.onerror = (error) => {
+            console.error('WebSocket Error:', error);
+        };
+
+        ws.current.onclose = (event) => {
+            console.log('WebSocket Closed:', event);
+        };
+
+        // Cleanup
+        return () => {
+            if (ws.current) {
+                ws.current.close();
+            }
+        };
+    }, []);
+
+    // 스크롤 효과
     useEffect(() => {
         if (chatMessagesRef.current) {
             chatMessagesRef.current.scrollTop = chatMessagesRef.current.scrollHeight;
         }
     }, [messages]);
 
-    const handleSendMessage = async () => {
-        if (inputValue.trim() !== '') {
-            // Create the new message object
+    // 메시지 전송 함수
+    const sendMessage = () => {
+        if (!inputValue.trim() || !ws.current) return;
+
+        try {
+            // 사용자 메시지 추가
             const newMessage = {
-                id: messages.length + 1,
+                id: Date.now(),
                 sender: 'You',
                 text: inputValue,
                 time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
                 sentByUser: true,
-                read: false, // New message is read by default
             };
+            setMessages(prev => [...prev, newMessage]);
 
-            // Update messages with the new user message
-            setMessages((prevMessages) => [...prevMessages, newMessage]);
-
-            // Send the message to the backend asynchronously
-            try {
-                // Make a POST request to your backend with the message as JSON
-                const response = await fetch('https://your-backend-api-url.com/message', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        text: inputValue,
-                    }),
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-
-                    // Assuming the backend sends a message response
-                    const receivedMessage = {
-                        id: messages.length + 2, // Increment ID for new message
-                        sender: '잇픽', // or another name based on your backend response
-                        text: data.response, // Response message from backend
-                        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                        sentByUser: false,
-                        read: true, // Backend message is read by default
-                    };
-
-                    // Update the messages with the backend response
-                    setMessages((prevMessages) => [...prevMessages, receivedMessage]);
-                } else {
-                    // Handle the case when the response status is not OK
-                    const errorMessage = {
-                        id: messages.length + 2,
-                        sender: '잇픽',
-                        text: '죄송합니다. 서버에서 오류가 발생했습니다. 다시 시도해주세요.',
-                        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                        sentByUser: false,
-                        read: true,
-                    };
-                    setMessages((prevMessages) => [...prevMessages, errorMessage]);
-                }
-            } catch (error) {
-                console.error('Error sending message:', error);
-
-                // Send an error message to the chat if there's an error in the request
-                const errorMessage = {
-                    id: messages.length + 2,
-                    sender: '잇픽',
-                    text: '죄송합니다. 서버에 연결할 수 없습니다. 나중에 다시 시도해주세요.',
-                    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                    sentByUser: false,
-                    read: true,
+            // WebSocket으로 메시지 전송
+            if (ws.current.readyState === WebSocket.OPEN) {
+                const messageData = {
+                    action: "sendMessage",  // API Gateway에서 요구하는 action 필드 추가
+                    sessionId: `session_${Date.now()}`,
+                    userId: `user_${Date.now()}`,
+                    message: inputValue
                 };
-
-                setMessages((prevMessages) => [...prevMessages, errorMessage]);
+                console.log('Sending message:', messageData);
+                ws.current.send(JSON.stringify(messageData));
+                setInputValue('');
+            } else {
+                console.error('WebSocket not ready. Current state:', ws.current.readyState);
             }
-
-            // Clear the input field
-            setInputValue('');
+        } catch (error) {
+            console.error('Error in sendMessage:', error);
         }
-    };
-
-    const toggleReadStatus = (id) => {
-        setMessages((prevMessages) =>
-            prevMessages.map((message) =>
-                message.id === id && !message.sentByUser // Only toggle read for messages sent by opponent
-                    ? { ...message, read: true }
-                    : message
-            )
-        );
     };
 
     return (
@@ -112,31 +116,30 @@ const ContactProp = () => {
                 {messages.map((msg) => (
                     <div
                         key={msg.id}
-                        className={`${style.messageBubble} ${msg.sentByUser ? style.sent : style.received} ${msg.read ? style.read : style.unread}`}
-                        onClick={() => msg.sentByUser ? null : toggleReadStatus(msg.id)} // Only allow the opponent's messages to be marked as read
+                        className={`${style.messageBubble} ${msg.sentByUser ? style.sent : style.received}`}
                     >
-                        <div className={style.senderName}>{!msg.sentByUser ? `${msg.sender}` : ''}</div>
-                        <span className={style.messageText}>{msg.text}</span>
-                        <div className={style.messageFooter}>
-                            <span className={style.messageTime}>{msg.time}</span>
-                            {msg.sentByUser && (
-                                <span className={`${style.readStatus} ${msg.read ? style.read : style.unread}`}>
-                                    {msg.read ? 'Read' : 'Unread'}
-                                </span>
-                            )}
+                        <div className={style.senderName}>
+                            {!msg.sentByUser ? msg.sender : ''}
                         </div>
+                        <div
+                            className={style.messageText}
+                            dangerouslySetInnerHTML={{ __html: msg.text }} // Rendering with HTML
+                        ></div>
+                        <div className={style.messageTime}>{msg.time}</div>
                     </div>
                 ))}
             </div>
             <div className={style.chatInput}>
                 <input
                     type="text"
-                    placeholder="Type a message..."
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                    onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+                    placeholder="메시지를 입력하세요..."
                 />
-                <div onClick={handleSendMessage}>Send</div>
+                <div onClick={sendMessage}>
+                    전송
+                </div>
             </div>
         </div>
     );
