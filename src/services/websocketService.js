@@ -1,4 +1,5 @@
-// src/services/websocketService.js
+import { Web_Socket_Key } from '../config';
+
 class WebSocketService {
     constructor() {
         this.ws = null;
@@ -7,7 +8,7 @@ class WebSocketService {
         this.reconnectAttempts = 0;
         this.maxReconnectAttempts = 5;
         this.onMessageCallback = null;
-        this.wsUrl = 'wss://lu6wbizt4e.execute-api.ap-northeast-1.amazonaws.com/production/';  // WebSocket URL을 직접 설정
+        this.wsUrl = Web_Socket_Key;
     }
 
     connect(userId, sessionId) {
