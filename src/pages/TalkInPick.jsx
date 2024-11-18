@@ -122,7 +122,7 @@ const TalkInPick = () => {
 
     return (
         <div className={style.TalkInPick}>
-            <Title text={"교수님에 대해 인픽과 대화하세요"} />
+            <Title text1={"교수님"} text2={"에 대해 인픽과 대화하세요"} />
             <div className={style.chatMessages} ref={chatMessagesRef}>
                 {messages.map((msg) => (
                     <div

@@ -4,7 +4,7 @@ import style from '../styles/modules/SearchProp.module.css';
 function SearchProp({ result = 4, info }) {
     return (
         <div className={style.SearchProp}>
-            <Title text={"교수 검색 결과"} />
+            <Title text1={"교수"} text2={" 검색 결과"} />
             <div className={style.listBoxArea}>
                 {/* Loop through to simulate similar box structure */}
                 {Array.from({ length: result }).map((_, index) => (
