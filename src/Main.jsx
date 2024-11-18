@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './pages/Home';
-import ContactProp from './pages/ContactProp';
+import TalkInPick from './pages/TalkInPick';
 import SearchProp from './pages/SearchProp';
 import ApplicationStatus from './pages/ApplicationStatus';
 import Result from './pages/Result';
@@ -32,7 +32,7 @@ function Main() {
             onLogoutClick={handleLogoutClick} />
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/ContactProp" element={<ContactProp />} />
+            <Route path="/TalkInPick" element={<TalkInPick />} />
             <Route path="/searchProp" element={<SearchProp />} />
             <Route path="/ApplicationStatus" element={<ApplicationStatus />} />
             <Route path="/Result" element={<Result />} />

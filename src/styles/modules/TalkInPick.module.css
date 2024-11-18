@@ -1,10 +1,10 @@
-.ContactProp {
+.TalkInPick {
     display: flex;
     flex-direction: column;
     width: 70%;
-    height: 100vh; /* Ensures full height of viewport */
+    height: 100vh;
     margin: auto;
-    margin-top: 0; /* Removed margin-top to utilize full height */
+    margin-top: 0;
 }
 
 .chatHeader {
@@ -18,7 +18,7 @@
 
 .chatMessages {
     padding: 10px 20px;
-    flex-grow: 1; /* Ensures chat messages take up available space */
+    flex-grow: 1;
     overflow-y: auto;
     max-height: 80%;
     margin-bottom: 50px;
@@ -47,12 +47,16 @@
 
 .senderName {
     font-weight: bold;
-    font-size: 12px;
+    font-family: 'DM Sans';
+    font-size: 14px;
     margin-bottom: 4px;
 }
 
 .messageText {
     display: block;
+    font-family: 'DM Sans';
+    font-weight: bold;
+    font-size: 14px;
     margin-bottom: 6px;
 }
 
@@ -65,7 +69,8 @@
 }
 
 .messageTime {
-    margin-right: 10px;
+    font-size: 12px;
+    margin-right: 0;
 }
 
 .readStatus {
@@ -89,9 +94,13 @@
     margin: auto;
     border-top: 1px solid #ccc;
     padding: 10px;
-    background-color: #fff; /* Ensures a distinct background */
+    background-color: #F4F4F4F4;
     position: sticky;
-    bottom: 50px; /* Keeps it at the bottom */
+    bottom: 50px;
+    border: solid;
+    border-radius: 50px;
+    border-width: 0;
+    box-shadow: 0px 5px 10px 0px #6f6f6ff5;
 }
 
 .chatInput input {
@@ -99,17 +108,19 @@
     padding: 10px;
     border: none;
     outline: none;
+    font-family: 'DM Sans';
     font-size: 14px;
+    background-color: #F4F4F4F4;
 }
 
 .chatInput div {
-    padding: 10px;
-    background-color: #767676;
+    margin: auto;
+    margin-right: 5px;
     color: white;
     border: none;
     cursor: pointer;
 }
 
-.chatInput div:hover {
-    background-color: #0056b3;
+.chatInput img {
+    width: 25px;
 }

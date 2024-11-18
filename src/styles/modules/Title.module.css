@@ -4,10 +4,15 @@
     padding-top: 80px;
     font-weight: bold;
     text-align: center;
+    border-bottom: 1px solid #DEE5ED;
 }
 
 .Title h1 {
     display: contents;
     font-size: 60px;
-    color: #486284;
+    color: #000000;
+}
+
+.Title span {
+    color: #19A7CE;
 }

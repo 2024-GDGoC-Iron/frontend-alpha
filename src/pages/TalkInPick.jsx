@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Web_Socket_Key } from '../config';
+import airPlane from '../assets/pPlane.svg';
 import Title from '../components/Title';
-import style from '../styles/modules/ContactProp.module.css';
+import style from '../styles/modules/TalkInPick.module.css';
 
-const ContactProp = () => {
+const TalkInPick = () => {
     const [messages, setMessages] = useState([]);
     const [inputValue, setInputValue] = useState('');
     const chatMessagesRef = useRef(null);
@@ -14,7 +15,7 @@ const ContactProp = () => {
         // 초기 메시지 설정
         setMessages([{
             id: 1,
-            sender: '잇픽',
+            sender: '인픽',
             text: '저와 함께 채팅을 시작해요!',
             time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
             sentByUser: false,
@@ -40,7 +41,7 @@ const ContactProp = () => {
                 if (response && response.message) {
                     const newMessage = {
                         id: Date.now(),
-                        sender: '잇픽',
+                        sender: '인픽',
                         text: response.message.replace(/\n/g, '<br/>'),
                         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
                         sentByUser: false,
@@ -49,7 +50,7 @@ const ContactProp = () => {
                 } else {
                     const newMessage = {
                         id: Date.now(),
-                        sender: '잇픽',
+                        sender: '인픽',
                         text: "알빠노",
                         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
                         sentByUser: false,
@@ -120,8 +121,8 @@ const ContactProp = () => {
     };
 
     return (
-        <div className={style.ContactProp}>
-            <Title text={"교수님에 대해 인픽과 대화하세요"} />
+        <div className={style.TalkInPick}>
+            <Title text1={"교수님"} text2={"에 대해 인픽과 대화하세요"} />
             <div className={style.chatMessages} ref={chatMessagesRef}>
                 {messages.map((msg) => (
                     <div
@@ -145,14 +146,14 @@ const ContactProp = () => {
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
-                    placeholder="메시지를 입력하세요..."
+                    placeholder="무엇을 물어볼까요?"
                 />
                 <div onClick={sendMessage}>
-                    전송
+                    <img src={airPlane}></img>
                 </div>
             </div>
         </div>
     );
 };
 
-export default ContactProp;
+export default TalkInPick;

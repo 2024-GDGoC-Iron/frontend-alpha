@@ -51,8 +51,9 @@
 .buttonArea button {
     padding: 12px 20px;
     border-radius: 50px;
-    border: 2px solid #486284;
+    border: 2px solid #4682A9;
     font-family: 'DM Sans';
+    font-weight: bolder;
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s, color 0.3s; /* Smooth hover effect */
@@ -64,12 +65,12 @@
 }
 
 .buttonArea .button1:hover {
-    background-color: #486284;
+    background-color: #4682A9;
     color: #FFFFFF;
 }
 
 .buttonArea .button2 {
-    background-color: #486284;
+    background-color: #4682A9;
     color: #FFFFFF;
 }
 
