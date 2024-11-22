@@ -1,4 +1,4 @@
-import style from '../styles/modules/Popup.module.css';
+import style from '../../styles/modules/Popup.module.css';
 
 function Popup({ infoJson }) {
     return (
