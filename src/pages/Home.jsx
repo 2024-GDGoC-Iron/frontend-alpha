@@ -15,8 +15,7 @@ function Home() {
                     <p>매칭도, 컨택도 인픽과 함께</p>
                 </div>
                 <div className={style.buttonArea}>
-                    <button className={style.button1} onClick={() => navigate('/TalkInPick')}>랩실 매칭이 필요해요</button>
-                    <button className={style.button2} onClick={() => navigate('/SearchProp')}>컨택할 랩을 결정했어요</button>
+                    <button onClick={() => navigate('/TalkInPick')}>AI와 채팅 시작하기</button>
                 </div>
             </div>
         </div>

@@ -59,22 +59,12 @@
     transition: background-color 0.3s, color 0.3s; /* Smooth hover effect */
 }
 
-.buttonArea .button1 {
-    background-color: #ffffff;
-    color: #000000;
-}
-
-.buttonArea .button1:hover {
+.buttonArea button {
     background-color: #4682A9;
     color: #FFFFFF;
 }
 
-.buttonArea .button2 {
-    background-color: #4682A9;
-    color: #FFFFFF;
-}
-
-.buttonArea .button2:hover {
+.buttonArea button:hover {
     background-color: #ffffff;
     color: #000000;
 }
