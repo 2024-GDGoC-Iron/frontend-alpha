@@ -1,1 +1,2 @@
 export const Web_Socket_Key = "wss://lu6wbizt4e.execute-api.ap-northeast-1.amazonaws.com/production/";
+export const Chat_Analyze_URL = "https://c4lnp44051.execute-api.ap-northeast-1.amazonaws.com/ChatAnalysisMainLambda";
