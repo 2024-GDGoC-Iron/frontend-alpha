@@ -1,0 +1,15 @@
+.Popup {
+    position: fixed;
+    width: 100vh;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 99999;
+}
+
+.box {
+    width: 70%;
+    height: 60%;
+    background-color: aliceblue;
+}
