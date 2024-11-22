@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import logo from '../assets/logo.png';
-import style from '../styles/modules/Header.module.css';
+import logo from '../../assets/logo.png';
+import style from '../../styles/modules/Header.module.css';
 
 function Header({ isLoggedIn = false, onLoginClick, onLogoutClick }) {
     const navigate = useNavigate();
