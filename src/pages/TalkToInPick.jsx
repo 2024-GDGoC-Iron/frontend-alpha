@@ -5,9 +5,9 @@ import { Modal } from '../components/common/Modal';
 import { ProfessorMatchCard } from '../components/dashboard/ProfessorMatchCard';
 import { ChatSummaryCard } from '../components/dashboard/ChatSummaryCard'; 
 import { useWebSocket } from '../hooks/useWebSocket';
-import { Web_Socket_Key } from '../config';
+import { Web_Socket_Key, Chat_Analyze_URL } from '../config';
 
-const ChatPage = () => {
+const TalkToInPick = () => {
   const [messages, setMessages] = useState([
     { 
       id: Date.now(),
@@ -24,13 +24,15 @@ const ChatPage = () => {
   const [showMatchModal, setShowMatchModal] = useState(false);
   const [analysisResult, setAnalysisResult] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [error, setError] = useState(null);
+  const [retryAttempts, setRetryAttempts] = useState(0);
+  const MAX_RETRY_ATTEMPTS = 3;
   const messagesEndRef = useRef(null);
   
-  // 세션 정보
   const [sessionId] = useState(`session_${Date.now()}`);
   const [userId] = useState('user_' + Math.random().toString(36).substr(2, 9));
   
-  const { socket, isConnected, sendMessage } = useWebSocket(
+  const { socket, isConnected, sendMessage, reconnect } = useWebSocket(
     `${Web_Socket_Key}?userId=${userId}&sessionId=${sessionId}`
   );
 
@@ -38,94 +40,111 @@ const ChatPage = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const handleSend = (e) => {
-    e.preventDefault();
-    if (!inputText.trim() || !isConnected) return;
-
-    const userMessage = {
-      id: Date.now(),
-      text: inputText,
-      time: new Date().toLocaleTimeString('ko-KR', {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false
-      }),
-      isUser: true
-    };
-
-    setMessages(prev => [...prev, userMessage]);
-    setInputText('');
-
-    sendMessage({
-      action: 'sendMessage',
-      sessionId,
-      userId,
-      message: inputText
-    });
+  const handleError = (errorMessage, shouldRetry = true) => {
+    setError(errorMessage);
+    
+    if (shouldRetry && retryAttempts < MAX_RETRY_ATTEMPTS) {
+      setRetryAttempts(prev => prev + 1);
+      reconnect();
+    } else if (retryAttempts >= MAX_RETRY_ATTEMPTS) {
+      setError('연결 재시도 횟수를 초과했습니다. 페이지를 새로고침해주세요.');
+      setIsAnalyzing(false);
+    }
   };
 
-  // WebSocket 메시지 수신 처리
-  useEffect(() => {
-    if (socket) {
-      socket.onmessage = (event) => {
-        if (!event.data) {
-          console.log('Empty message received');
-          return;
-        }
-
-        try {
-          const response = JSON.parse(event.data);
-          console.log('Received WebSocket message:', response);
-
-          if (response.type === 'message' && response.data?.message) {
-            const aiMessage = {
-              id: Date.now(),
-              text: response.data.message,
-              time: new Date(response.data.timestamp).toLocaleTimeString('ko-KR', {
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: false
-              }),
-              isUser: false
-            };
-            
-            setMessages(prev => [...prev, aiMessage]);
-          } 
-          else if (response.type === 'analysis-complete' && response.data) {
-            setAnalysisResult(response.data);
-            setIsAnalyzing(false);
-            console.log(response.data);
-          }
-          else if (response.type === 'error') {
-            console.error('Server error:', response.data?.message);
-            setIsAnalyzing(false);
-          }
-        } catch (error) {
-          if (event.data) {
-            console.error('Error parsing WebSocket message:', error);
-            console.log('Raw message:', event.data);
-          }
-        }
-      };
-
-      socket.onerror = (error) => {
-        console.error('WebSocket error:', error);
-        setIsAnalyzing(false);
-      };
-
-      socket.onclose = () => {
-        console.log('WebSocket disconnected');
-      };
+  const handleSend = (e) => {
+    e.preventDefault();
+    if (!inputText.trim()) return;
+    
+    if (!isConnected) {
+      handleError('연결이 끊어졌습니다. 재연결을 시도합니다.');
+      return;
     }
+
+    try {
+      const userMessage = {
+        id: Date.now(),
+        text: inputText,
+        time: new Date().toLocaleTimeString('ko-KR', {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false
+        }),
+        isUser: true
+      };
+
+      setMessages(prev => [...prev, userMessage]);
+      setInputText('');
+      setError(null);
+
+      sendMessage({
+        action: 'sendMessage',
+        sessionId,
+        userId,
+        message: inputText
+      });
+    } catch (error) {
+      handleError('메시지 전송 중 오류가 발생했습니다.');
+    }
+  };
+
+  useEffect(() => {
+    if (!socket) return;
+
+    socket.onmessage = (event) => {
+      if (!event.data) {
+        handleError('빈 메시지가 수신되었습니다.', false);
+        return;
+      }
+
+      try {
+        const response = JSON.parse(event.data);
+        console.log('Received WebSocket message:', response);
+
+        if (response.type === 'message' && response.data?.message) {
+          const aiMessage = {
+            id: Date.now(),
+            text: response.data.message,
+            time: new Date(response.data.timestamp).toLocaleTimeString('ko-KR', {
+              hour: '2-digit',
+              minute: '2-digit',
+              hour12: false
+            }),
+            isUser: false
+          };
+          
+          setMessages(prev => [...prev, aiMessage]);
+          setError(null);
+        } 
+        else if (response.type === 'analysis-complete' && response.data) {
+          setAnalysisResult(response.data);
+          setIsAnalyzing(false);
+          setError(null);
+        }
+        else if (response.type === 'error') {
+          handleError(response.data?.message || '서버 오류가 발생했습니다.');
+        }
+      } catch (error) {
+        handleError('메시지 처리 중 오류가 발생했습니다.');
+      }
+    };
+
+    socket.onerror = (error) => {
+      handleError('웹소켓 연결 오류가 발생했습니다.');
+    };
+
+    socket.onclose = () => {
+      handleError('연결이 종료되었습니다. 재연결을 시도합니다.');
+    };
   }, [socket]);
 
-  // 채팅 종료 처리
   const handleEndChat = async () => {
     try {
       setIsAnalyzing(true);
       setShowMatchModal(true);
+      setError(null);
 
-      const response = await fetch('https://c4lnp44051.execute-api.ap-northeast-1.amazonaws.com/ChatAnalysisMainLambda', {
+      const response = await fetch(Chat_Analyze_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -137,16 +156,25 @@ const ChatPage = () => {
       });
 
       if (!response.ok) {
-        throw new Error('분석 요청 실패');
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
 
+      const data = await response.json();
+      console.log(data);
+
     } catch (error) {
-      console.error('분석 요청 오류:', error);
-      alert('분석 중 오류가 발생했습니다.');
-      setIsAnalyzing(false);
+      handleError('분석 요청 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.', false);
       setShowMatchModal(false);
     }
   };
+
+  // Error message component
+  const ErrorMessage = ({ message }) => (
+    <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative mb-4">
+      <strong className="font-bold">오류 발생: </strong>
+      <span className="block sm:inline">{message}</span>
+    </div>
+  );
 
   return (
     <div className="flex flex-col min-h-[calc(100vh-136px)]">
@@ -158,16 +186,28 @@ const ChatPage = () => {
               <span className="text-[#4B9FD6]">진로 상담</span>에 대해 인픽과 대화하세요
             </h1>
             <div className="flex items-center gap-4">
-              <span className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`} />
+              <div className="flex items-center gap-2">
+                <span className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`} />
+                <span className="text-sm text-gray-500">
+                  {isConnected ? '연결됨' : '연결 끊김'}
+                </span>
+              </div>
               <button
                 onClick={handleEndChat}
-                disabled={isAnalyzing}
-                className={`text-gray-400 hover:text-gray-600 px-4 py-2 ${isAnalyzing ? 'opacity-50 cursor-not-allowed' : ''}`}
+                disabled={isAnalyzing || !isConnected}
+                className={`text-gray-400 hover:text-gray-600 px-4 py-2 ${(isAnalyzing || !isConnected) ? 'opacity-50 cursor-not-allowed' : ''}`}
               >
                 {isAnalyzing ? '분석중...' : '종료하기'}
               </button>
             </div>
           </div>
+
+          {/* 에러 메시지 표시 */}
+          {error && (
+            <div className="px-8 mt-4">
+              <ErrorMessage message={error} />
+            </div>
+          )}
 
           {/* 채팅 메시지 영역 */}
           <div className="flex-1 overflow-y-auto px-8 py-6 space-y-6">
@@ -188,6 +228,7 @@ const ChatPage = () => {
               onChange={(e) => setInputText(e.target.value)}
               onSubmit={handleSend}
               disabled={!isConnected || isAnalyzing}
+              placeholder={!isConnected ? "연결 중입니다..." : "메시지를 입력하세요"}
             />
           </div>
         </div>
@@ -211,13 +252,15 @@ const ChatPage = () => {
           </div>
 
           <div className="space-y-6">
+            {/* 모달 내 에러 메시지 */}
+            {error && <ErrorMessage message={error} />}
+
             {isAnalyzing ? (
               <div className="text-center py-8">
                 <p className="text-lg text-gray-600">분석 중입니다...</p>
               </div>
             ) : analysisResult ? (
               <>
-                {/* 챗 분석 요약 */}
                 <div className="mb-8">
                   <h3 className="text-lg font-semibold mb-4">💬 상담 내용 분석</h3>
                   <ChatSummaryCard 
@@ -231,7 +274,6 @@ const ChatPage = () => {
                   />
                 </div>
 
-                {/* 교수 매칭 결과 */}
                 {analysisResult.match && (
                   <div>
                     <h3 className="text-lg font-semibold mb-4">🎯 추천 교수님</h3>
@@ -275,4 +317,4 @@ const ChatPage = () => {
   );
 };
 
-export default ChatPage;
+export default TalkToInPick;
