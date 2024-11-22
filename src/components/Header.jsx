@@ -12,7 +12,7 @@ function Header({ isLoggedIn = false, onLoginClick, onLogoutClick }) {
             navigate('/'); 
         } else {
             onLoginClick();
-            navigate('/login');
+            navigate('/');
         }
     };
     return (
@@ -21,13 +21,12 @@ function Header({ isLoggedIn = false, onLoginClick, onLogoutClick }) {
                 <img src={logo} alt="logo" onClick={() => navigate('/')} />
                 <h1 onClick={() => navigate('/')}>IN!PICK</h1>
                 <ul className={style.MenuArea}>
-                    <li onClick={() => navigate('/')} >Home</li>
-                    <li onClick={() => navigate('/TalkInPick')} >인픽 추천</li>
-                    <li onClick={() => navigate('/SearchProp')} >교수 찾기</li>
-                    <li onClick={() => navigate('/ApplicationStatus')} >지원현황</li>
+                    <li onClick={() => navigate('/')} >홈</li>
+                    <li onClick={() => navigate('/TalkInPick')} >채팅하기</li>
+                    <li onClick={() => navigate('/SearchProp')} >대시보드</li>
                     <li onClick={() => navigate('/SignIn')} >
                         <div className={style.login} onClick={handleAuthClick}>
-                            {isLoggedIn ? "로그인 및 회원가입" : "로그아웃"}
+                            {isLoggedIn ? "로그인 및 회원가입" : "프로필"}
                         </div>
                     </li>
                 </ul>

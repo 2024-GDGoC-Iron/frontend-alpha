@@ -4,9 +4,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import TalkInPick from './pages/TalkInPick';
-import SearchProp from './pages/SearchProp';
-import ApplicationStatus from './pages/ApplicationStatus';
-import Result from './pages/Result';
+import Dashboard from './pages/Dashboard';
 import SignIn from './pages/SignIn';
 
 import './styles/Main.css';
@@ -33,21 +31,14 @@ function Main() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/TalkInPick" element={<TalkInPick />} />
-            <Route path="/searchProp" element={<SearchProp />} />
-            <Route path="/ApplicationStatus" element={<ApplicationStatus />} />
-            <Route path="/Result" element={<Result />} />
+            <Route path="/Dashboard" element={<Dashboard />} />
             <Route path="/SignIn" element={<SignIn />} />
           </Routes>
-          <ConditionalFooter />
+          <Footer />
         </>
       </div>
     </BrowserRouter>
   );
-}
-
-function ConditionalFooter() {
-  const location = useLocation(); // Now `useLocation` is used inside the context of a Router
-  return location.pathname === '/' ? <Footer /> : null;
 }
 
 export default Main;
